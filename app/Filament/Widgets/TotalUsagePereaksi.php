@@ -15,26 +15,30 @@ use Illuminate\Support\Facades\DB;
 class TotalUsagePereaksi extends BaseWidget
 {
     protected int | string | array $columnSpan = 1;
+    public function getTableHeading(): string
+    {
+        return "Total Reagent Usage";
+    }
     public function table(Table $table): Table
     {
         return $table
             ->query(
                 UsageHistory::query()
                     ->select(
-                        'KODE',
-                        'jenis_pereaksi',
+                        'kode_reagent',
+                        'jenis_reagent',
                         DB::raw('SUM(jumlah_penggunaan) as total_penggunaan'),
                         DB::raw('MIN(id) as id') // Menambahkan id untuk primary key
                     )
-                    ->groupBy('KODE', 'jenis_pereaksi')
+                    ->groupBy('kode_reagent', 'jenis_reagent')
             )
             ->columns([
-                TextColumn::make('KODE')
-                    ->label('Kode Pereaksi')
+                TextColumn::make('kode_reagent')
+                    ->label('Kode Reagent')
                     ->sortable()
                     ->searchable(),
-                TextColumn::make('jenis_pereaksi')
-                    ->label('Nama Pereaksi')
+                TextColumn::make('jenis_reagent')
+                    ->label('Jenis Reagent')
                     ->sortable()
                     ->searchable(),
                 TextColumn::make('total_penggunaan')
@@ -67,7 +71,7 @@ class TotalUsagePereaksi extends BaseWidget
 
     public function getTableRecordKey(mixed $record): string
     {
-        return (string) $record->KODE; // Menggunakan KODE sebagai unique identifier
+        return (string) $record->kode_reagent; // Menggunakan KODE sebagai unique identifier
     }
-    protected static ?int $sort = 3;
+    protected static ?int $sort = 4;
 }

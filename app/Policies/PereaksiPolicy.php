@@ -63,7 +63,7 @@ class PereaksiPolicy
      */
     public function forceDelete(User $user, Pereaksi $pereaksi): bool
     {
-        return $user->can('force_delete_pereaksi');
+        return $user->can('{{ ForceDelete }}');
     }
 
     /**
@@ -71,7 +71,7 @@ class PereaksiPolicy
      */
     public function forceDeleteAny(User $user): bool
     {
-        return $user->can('force_delete_any_pereaksi');
+        return $user->can('{{ ForceDeleteAny }}');
     }
 
     /**
@@ -79,7 +79,7 @@ class PereaksiPolicy
      */
     public function restore(User $user, Pereaksi $pereaksi): bool
     {
-        return $user->can('restore_pereaksi');
+        return $user->can('{{ Restore }}');
     }
 
     /**
@@ -87,7 +87,7 @@ class PereaksiPolicy
      */
     public function restoreAny(User $user): bool
     {
-        return $user->can('restore_any_pereaksi');
+        return $user->can('{{ RestoreAny }}');
     }
 
     /**
@@ -95,7 +95,7 @@ class PereaksiPolicy
      */
     public function replicate(User $user, Pereaksi $pereaksi): bool
     {
-        return $user->can('replicate_pereaksi');
+        return $user->can('{{ Replicate }}');
     }
 
     /**
@@ -103,6 +103,6 @@ class PereaksiPolicy
      */
     public function reorder(User $user): bool
     {
-        return $user->can('reorder_pereaksi');
+        return $user->can('{{ Reorder }}');
     }
 }

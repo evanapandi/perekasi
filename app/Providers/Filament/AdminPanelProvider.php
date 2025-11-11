@@ -63,9 +63,11 @@ class AdminPanelProvider extends PanelProvider
             ->navigationGroups([
                 'Form',
                 'History',
+                'Report',
             ])
             ->plugins([
                 \BezhanSalleh\FilamentShield\FilamentShieldPlugin::make(),
-            ]);
+            ])
+            ->databaseNotifications();  
     }
 }

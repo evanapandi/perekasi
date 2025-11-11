@@ -63,7 +63,7 @@ class RestockHistoryPolicy
      */
     public function forceDelete(User $user, RestockHistory $restockHistory): bool
     {
-        return $user->can('force_delete_restock::history');
+        return $user->can('{{ ForceDelete }}');
     }
 
     /**
@@ -71,7 +71,7 @@ class RestockHistoryPolicy
      */
     public function forceDeleteAny(User $user): bool
     {
-        return $user->can('force_delete_any_restock::history');
+        return $user->can('{{ ForceDeleteAny }}');
     }
 
     /**
@@ -79,7 +79,7 @@ class RestockHistoryPolicy
      */
     public function restore(User $user, RestockHistory $restockHistory): bool
     {
-        return $user->can('restore_restock::history');
+        return $user->can('{{ Restore }}');
     }
 
     /**
@@ -87,7 +87,7 @@ class RestockHistoryPolicy
      */
     public function restoreAny(User $user): bool
     {
-        return $user->can('restore_any_restock::history');
+        return $user->can('{{ RestoreAny }}');
     }
 
     /**
@@ -95,7 +95,7 @@ class RestockHistoryPolicy
      */
     public function replicate(User $user, RestockHistory $restockHistory): bool
     {
-        return $user->can('replicate_restock::history');
+        return $user->can('{{ Replicate }}');
     }
 
     /**
@@ -103,6 +103,6 @@ class RestockHistoryPolicy
      */
     public function reorder(User $user): bool
     {
-        return $user->can('reorder_restock::history');
+        return $user->can('{{ Reorder }}');
     }
 }

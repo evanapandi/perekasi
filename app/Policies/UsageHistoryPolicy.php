@@ -63,7 +63,7 @@ class UsageHistoryPolicy
      */
     public function forceDelete(User $user, UsageHistory $usageHistory): bool
     {
-        return $user->can('force_delete_usage::history');
+        return $user->can('{{ ForceDelete }}');
     }
 
     /**
@@ -71,7 +71,7 @@ class UsageHistoryPolicy
      */
     public function forceDeleteAny(User $user): bool
     {
-        return $user->can('force_delete_any_usage::history');
+        return $user->can('{{ ForceDeleteAny }}');
     }
 
     /**
@@ -79,7 +79,7 @@ class UsageHistoryPolicy
      */
     public function restore(User $user, UsageHistory $usageHistory): bool
     {
-        return $user->can('restore_usage::history');
+        return $user->can('{{ Restore }}');
     }
 
     /**
@@ -87,7 +87,7 @@ class UsageHistoryPolicy
      */
     public function restoreAny(User $user): bool
     {
-        return $user->can('restore_any_usage::history');
+        return $user->can('{{ RestoreAny }}');
     }
 
     /**
@@ -95,7 +95,7 @@ class UsageHistoryPolicy
      */
     public function replicate(User $user, UsageHistory $usageHistory): bool
     {
-        return $user->can('replicate_usage::history');
+        return $user->can('{{ Replicate }}');
     }
 
     /**
@@ -103,6 +103,6 @@ class UsageHistoryPolicy
      */
     public function reorder(User $user): bool
     {
-        return $user->can('reorder_usage::history');
+        return $user->can('{{ Reorder }}');
     }
 }

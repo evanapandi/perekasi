@@ -12,14 +12,12 @@ use Illuminate\Queue\SerializesModels;
 class StockAlert extends Mailable
 {
     use Queueable, SerializesModels;
-    public $pereaksi;
+    
     public $alertReagents;
-    public $user;
-
-    public function __construct($alertReagents, $user)
+    
+    public function __construct($alertReagents)
     {
         $this->alertReagents = $alertReagents;
-        $this->user = $user;
     }
 
     /**
@@ -41,7 +39,6 @@ class StockAlert extends Mailable
             view: 'emails.OutOfStockNotification',
             with: [
                 'alertReagents' => $this->alertReagents,
-                'user' => $this->user
             ]
         );
     }

@@ -10,42 +10,51 @@ class Pereaksi extends Model
 {
     use HasFactory, SoftDeletes;
     protected $table = 'pereaksi';
-    protected $primaryKey = 'KODE';
+    protected $primaryKey = 'kode_reagent';
     protected $keyType = 'string';
+    public $incrementing = false;
 
     protected $fillable = [
-        'KODE',
-        'ITEM',
-        'TYPE',
+        'kode_reagent',
+        'nama_reagent',
+        'jenis_reagent',
+        'chemical_formula',
         'Stock',
-        'Status'
+        'satuan',
+        'min_stock',
     ];
 
     // Explicitly cast KODE to string if needed
     protected $casts = [
-        'KODE' => 'string',
-        'Stock' => 'integer',
+        'kode_reagent' => 'string',
+        'Stock' => 'float',
     ];
+    
     public function usageHistories()
     {
-        return $this->hasMany(UsageHistory::class, 'KODE', 'KODE');
+        return $this->hasMany(UsageHistory::class, 'kode_reagent', 'kode_reagent');
     }
 
     public function restockHistories()
     {
-        return $this->hasMany(RestockHistory::class, 'KODE', 'KODE');
+        return $this->hasMany(RestockHistory::class, 'kode_reagent', 'kode_reagent');
     }
-    public function updateStatus()
+
+    public function getStatusAttribute(): string
     {
-        if ($this->Stock === 0) {
-            $this->Status = 'Out of Stock';
-        } elseif ($this->Stock <= 500) {
-            $this->Status = 'Under Stock';
-        } else {
-            $this->Status = 'In Stock';
+        $stock = $this->Stock;
+        $minStock = $this->min_stock;
+
+        if ($stock == 0) {
+            return 'Out of Stock';
         }
         
-        return $this->save();
+        if ($stock < $minStock) {
+            return 'Under Stock';
+        }
+        
+        return 'In Stock';
     }
+    
     protected $guarded = [];
 }

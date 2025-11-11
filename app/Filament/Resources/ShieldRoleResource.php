@@ -8,7 +8,7 @@ class ShieldRoleResource extends BaseRoleResource
 {
     public static function getNavigationGroup(): string
     {
-        return 'Settings';
+        return 'User Management';
     }
 
     public static function getNavigationSort(): int

@@ -11,6 +11,10 @@ use App\Models\Pereaksi;
 class OutOfStockPereaksi extends BaseWidget
 {
     protected int | string | array $columnSpan = 1;
+    public function getTableHeading(): string
+    {
+        return "Out of Stock Reagent";
+    }
     public function table(Table $table): Table
     {
         return $table
@@ -18,12 +22,12 @@ class OutOfStockPereaksi extends BaseWidget
                 Pereaksi::query()->where('Stock', 0)
             )
             ->columns([
-                TextColumn::make('KODE')
-                    ->label('Kode Pereaksi')
+                TextColumn::make('kode_reagent')
+                    ->label('Kode Reagent')
                     ->sortable()
                     ->searchable(),
-                TextColumn::make('ITEM')
-                    ->label('Nama Pereaksi')
+                TextColumn::make('nama_reagent')
+                    ->label('Nama Reagent')
                     ->sortable()
                     ->searchable(),
                 TextColumn::make('Status')
@@ -36,5 +40,5 @@ class OutOfStockPereaksi extends BaseWidget
                     })
             ]);
     }
-    protected static ?int $sort = 4;
+    protected static ?int $sort = 7;
 }
