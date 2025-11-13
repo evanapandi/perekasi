@@ -1,18 +1,62 @@
-name: GitHub Actions Demo
-run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
-on: [push]
+name: CI/CD - Deploy Laravel 11 to Azure App Service (medifarma-app)
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
 jobs:
-  Explore-GitHub-Actions:
+  build-and-deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
-      - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
-      - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
-      - name: Check out repository code
-        uses: actions/checkout@v5
-      - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
-      - run: echo "🖥️ The workflow is now ready to test your code on the runner."
-      - name: List files in the repository
-        run: |
-          ls ${{ github.workspace }}
-      - jalankan: echo "🍏 Status pekerjaan ini adalah ${{ job.status }}."
+    # 1️⃣ Ambil kode dari branch main
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    # 2️⃣ Setup PHP environment
+    - name: Setup PHP 8.2
+      uses: shivammathur/setup-php@v4
+      with:
+        php-version: '8.2'
+        extensions: mbstring, bcmath, xml, pdo_sqlsrv
+        coverage: none
+
+    # 3️⃣ Install dependencies Laravel
+    - name: Install Composer dependencies
+      run: |
+        composer install --no-dev --prefer-dist --no-interaction --optimize-autoloader
+
+    # 4️⃣ Generate APP_KEY (jika belum ada)
+    - name: Generate APP_KEY
+      run: php artisan key:generate --force
+
+    # 5️⃣ Jalankan migrasi database SQL Server
+    - name: Run migrations
+      env:
+        APP_ENV: production
+        DB_CONNECTION: sqlsrv
+        DB_HOST: ${{ secrets.DB_HOST }}
+        DB_PORT: ${{ secrets.DB_PORT }}
+        DB_DATABASE: ${{ secrets.DB_DATABASE }}
+        DB_USERNAME: ${{ secrets.DB_USERNAME }}
+        DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      run: php artisan migrate --force
+
+    # 6️⃣ Buat storage link & set permission
+    - name: Set up storage folder
+      run: |
+        php artisan storage:link || true
+        chmod -R 775 storage bootstrap/cache || true
+
+    # 7️⃣ Arsipkan kode untuk deployment
+    - name: Create ZIP for deployment
+      run: zip -r deploy.zip . -x ".git/*" ".github/*"
+
+    # 8️⃣ Deploy ke Azure Web App
+    - name: Deploy to Azure App Service
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: ${{ secrets.AZURE_WEBAPP_NAME }}
+        publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
+        package: deploy.zip
